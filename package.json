@@ -1,0 +1,15 @@
+{
+  "name": "nmc-rest-api-ts",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "ts-node-dev --inspect -- src/index.ts",
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "@types/node": "^10.12.21",
+    "ts-node-dev": "^1.0.0-pre.32",
+    "typescript": "^3.3.1"
+  }
+}

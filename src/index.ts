@@ -1,6 +1,6 @@
 import http from 'http'
 import url from 'url'
-import { StringDecoder } from 'string_decoder';
+import {StringDecoder} from 'string_decoder'
 
 const hello = (res: http.ServerResponse) => res.end('Hello World\n')
 
@@ -40,7 +40,10 @@ const server = http.createServer((req, res) => {
 
     hello(res)
 
-    console.log(`Request received on path: ${trimmedPath} with method: ${method} and with these query string parameters`, queryStringObject)
+    console.log(
+      `Request received on path: ${trimmedPath} with method: ${method} and with these query string parameters`,
+      queryStringObject
+    )
     console.log('Request received with these headers:', headers)
     console.log('Request received with these payload:', buffer)
   })

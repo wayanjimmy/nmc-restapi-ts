@@ -75,7 +75,7 @@ const server = http.createServer((req, res) => {
     buffer += decoder.end()
 
     let choosenHandler =
-      typeof router[trimmedPath] !== undefined
+      typeof router[trimmedPath] !== 'undefined'
         ? router[trimmedPath]
         : router['notFound']
 

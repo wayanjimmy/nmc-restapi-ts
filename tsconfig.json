@@ -4,7 +4,14 @@
     "module": "commonjs",
     "strict": true,
     "esModuleInterop": true,
+    "sourceMap": true,
     "rootDir": "./",
     "outDir": "./dist"
-  }
+  },
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

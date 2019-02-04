@@ -1,8 +1,44 @@
 import http from 'http'
 import url from 'url'
 import {StringDecoder} from 'string_decoder'
+import {ParsedUrlQuery} from 'querystring'
 
 const hello = (res: http.ServerResponse) => res.end('Hello World\n')
+
+function noop() {}
+
+interface Callback {
+  (statusCode: number, payload: Object): void
+}
+
+interface HandlerFunc {
+  (data: Data, cb: Callback): void
+}
+
+interface Router {
+  [key: string]: HandlerFunc
+}
+
+const sampleHandler: HandlerFunc = (_data, callback) => {
+  callback(406, {name: 'sample handler'})
+}
+
+const notFoundHandler: HandlerFunc = (_data, callback) => {
+  callback(404, noop)
+}
+
+const router: Router = {
+  sample: sampleHandler,
+  notFound: notFoundHandler
+}
+
+interface Data {
+  trimmedPath: string
+  queryStringObject: ParsedUrlQuery
+  method: string
+  headers: http.IncomingHttpHeaders
+  payload: string
+}
 
 const server = http.createServer((req, res) => {
   if (!req.url) {
@@ -38,14 +74,28 @@ const server = http.createServer((req, res) => {
   req.on('end', () => {
     buffer += decoder.end()
 
-    hello(res)
+    let choosenHandler =
+      typeof router[trimmedPath] !== undefined
+        ? router[trimmedPath]
+        : router['notFound']
 
-    console.log(
-      `Request received on path: ${trimmedPath} with method: ${method} and with these query string parameters`,
-      queryStringObject
-    )
-    console.log('Request received with these headers:', headers)
-    console.log('Request received with these payload:', buffer)
+    console.log(typeof router[trimmedPath])
+
+    let data: Data = {
+      trimmedPath,
+      queryStringObject,
+      method,
+      headers,
+      payload: buffer
+    }
+
+    choosenHandler(data, (statusCode: number = 200, payload: Object = {}) => {
+      let payloadString = JSON.stringify(payload)
+      res.writeHead(statusCode)
+      res.end(payloadString)
+
+      console.log('Returning this response: ', statusCode, payloadString)
+    })
   })
 })
 

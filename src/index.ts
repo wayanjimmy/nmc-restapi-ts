@@ -79,8 +79,6 @@ const server = http.createServer((req, res) => {
         ? router[trimmedPath]
         : router['notFound']
 
-    console.log(typeof router[trimmedPath])
-
     let data: Data = {
       trimmedPath,
       queryStringObject,

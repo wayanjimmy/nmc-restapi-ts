@@ -6,10 +6,7 @@
             "request": "attach",
             "name": "Debug",
             "protocol": "inspector",
-            "address": "0.0.0.0",
             "port": 9229,
-            "localRoot": "${workspaceFolder}/dist/src",
-            "remoteRoot": "/app/dist/src",
             "timeout": 60000
         }
     ]

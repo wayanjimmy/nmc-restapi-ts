@@ -5,6 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start": "ts-node-dev --inspect -- src/index.ts",
+    "debug": "npm run build && node --inspect=0.0.0.0:9229 ./dist/src/index.js",
     "build": "tsc"
   },
   "devDependencies": {

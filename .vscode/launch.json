@@ -3,15 +3,14 @@
     "configurations": [
         {
             "type": "node",
-            "request": "launch",
-            "name": "Typescript Node",
-            "program": "${workspaceFolder}/src/index.ts",
-            "preLaunchTask": "tsc: build - tsconfig.json",
-            "cwd": "${workspaceFolder}",
+            "request": "attach",
+            "name": "Debug",
             "protocol": "inspector",
-            "outFiles": [
-                "${workspaceFolder}/dist/**/*.js"
-            ]
+            "address": "0.0.0.0",
+            "port": 9229,
+            "localRoot": "${workspaceFolder}/dist/src",
+            "remoteRoot": "/app/dist/src",
+            "timeout": 60000
         }
     ]
 }

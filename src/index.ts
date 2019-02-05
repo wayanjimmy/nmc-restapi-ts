@@ -19,6 +19,14 @@ interface Router {
   [key: string]: HandlerFunc
 }
 
+interface Data {
+  trimmedPath: string
+  queryStringObject: ParsedUrlQuery
+  method: string
+  headers: http.IncomingHttpHeaders
+  payload: string
+}
+
 const sampleHandler: HandlerFunc = (_data, callback) => {
   callback(406, {name: 'sample handler'})
 }
@@ -30,14 +38,6 @@ const notFoundHandler: HandlerFunc = (_data, callback) => {
 const router: Router = {
   sample: sampleHandler,
   notFound: notFoundHandler
-}
-
-interface Data {
-  trimmedPath: string
-  queryStringObject: ParsedUrlQuery
-  method: string
-  headers: http.IncomingHttpHeaders
-  payload: string
 }
 
 const server = http.createServer((req, res) => {
@@ -74,10 +74,7 @@ const server = http.createServer((req, res) => {
   req.on('end', () => {
     buffer += decoder.end()
 
-    let choosenHandler =
-      typeof router[trimmedPath] !== 'undefined'
-        ? router[trimmedPath]
-        : router['notFound']
+    let choosenHandler = router[trimmedPath] || notFoundHandler
 
     let data: Data = {
       trimmedPath,
@@ -89,9 +86,10 @@ const server = http.createServer((req, res) => {
 
     choosenHandler(data, (statusCode: number = 200, payload: Object = {}) => {
       let payloadString = JSON.stringify(payload)
+
+      res.setHeader('Content-Type', 'application/json')
       res.writeHead(statusCode)
       res.end(payloadString)
-
       console.log('Returning this response: ', statusCode, payloadString)
     })
   })

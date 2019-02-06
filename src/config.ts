@@ -13,11 +13,11 @@ enum EnvironmentType {
 }
 
 const environments: Environments = {
-  development: {
+  [EnvironmentType.Development]: {
     port: 3000,
     envName: EnvironmentType.Development
   },
-  production: {
+  [EnvironmentType.Production]: {
     port: 5000,
     envName: EnvironmentType.Production
   }

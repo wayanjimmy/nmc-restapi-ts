@@ -23,8 +23,7 @@ const environments: Environments = {
   }
 }
 
-const currentEnvironment =
-  (process.env.NODE_ENV as string).toLowerCase() || EnvironmentType.Development
+const currentEnvironment = (process.env.NODE_ENV as string).toLowerCase() || EnvironmentType.Development
 
 const environmentToExport = environments[currentEnvironment]
 

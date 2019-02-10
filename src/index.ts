@@ -9,7 +9,9 @@ import config from './config'
 
 const hello = (res: http.ServerResponse) => res.end('Hello World\n')
 
-function noop() {}
+function noop() {
+  return {}
+}
 
 const sampleHandler: HandlerFunc = (_data, callback) => {
   callback(406, {name: 'sample handler'})
@@ -19,8 +21,13 @@ const notFoundHandler: HandlerFunc = (_data, callback) => {
   callback(404, noop)
 }
 
+const pingHandler: HandlerFunc = (_data, callback) => {
+  callback(200, noop)
+}
+
 const router: Router = {
   sample: sampleHandler,
+  ping: pingHandler,
   notFound: notFoundHandler
 }
 

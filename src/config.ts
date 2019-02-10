@@ -1,6 +1,7 @@
 interface Config {
-  port: number
   envName: string
+  httpPort: number
+  httpsPort: number
 }
 
 interface Environments {
@@ -14,11 +15,13 @@ enum EnvironmentType {
 
 const environments: Environments = {
   [EnvironmentType.Development]: {
-    port: 3000,
+    httpPort: 3000,
+    httpsPort: 3001,
     envName: EnvironmentType.Development
   },
   [EnvironmentType.Production]: {
-    port: 5000,
+    httpPort: 5000,
+    httpsPort: 5001,
     envName: EnvironmentType.Production
   }
 }

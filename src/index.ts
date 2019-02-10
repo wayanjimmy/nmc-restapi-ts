@@ -1,33 +1,15 @@
 import http from 'http'
+import https from 'https'
 import url from 'url'
 import {StringDecoder} from 'string_decoder'
-import {ParsedUrlQuery} from 'querystring'
+import fs from 'fs'
 
+import {HandlerFunc, Router, Data} from './types'
 import config from './config'
 
 const hello = (res: http.ServerResponse) => res.end('Hello World\n')
 
 function noop() {}
-
-interface Callback {
-  (statusCode: number, payload: Object): void
-}
-
-interface HandlerFunc {
-  (data: Data, cb: Callback): void
-}
-
-interface Router {
-  [key: string]: HandlerFunc
-}
-
-interface Data {
-  trimmedPath: string
-  queryStringObject: ParsedUrlQuery
-  method: string
-  headers: http.IncomingHttpHeaders
-  payload: string
-}
 
 const sampleHandler: HandlerFunc = (_data, callback) => {
   callback(406, {name: 'sample handler'})
@@ -42,7 +24,31 @@ const router: Router = {
   notFound: notFoundHandler
 }
 
-const server = http.createServer((req, res) => {
+const httpServer = http.createServer((req, res) => {
+  unifiedServer(req, res)
+})
+
+// Start the HTTP server
+httpServer.listen(config.httpPort, () => {
+  console.log(`The server is listening on port ${config.httpPort} in ${config.envName} now`)
+})
+
+// Instantiate the HTTPS server
+const httpsServerOptions = {
+  key: fs.readFileSync('./https/key.pem'),
+  cert: fs.readFileSync('./https/cert.pem')
+}
+
+const httpsServer = https.createServer(httpsServerOptions, (req, res) => {
+  unifiedServer(req, res)
+})
+
+// Start the HTTPS server
+httpsServer.listen(config.httpsPort, () => {
+  console.log(`The server is listening on port ${config.httpsPort} in ${config.envName} now`)
+})
+
+const unifiedServer = (req: http.IncomingMessage, res: http.ServerResponse) => {
   if (!req.url) {
     hello(res)
     return
@@ -95,10 +101,4 @@ const server = http.createServer((req, res) => {
       console.log('Returning this response: ', statusCode, payloadString)
     })
   })
-})
-
-server.listen(config.port, () => {
-  console.log(
-    `The server is listening on port ${config.port} in ${config.envName} now`
-  )
-})
+}
